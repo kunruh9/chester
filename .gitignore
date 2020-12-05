@@ -1,1 +1,6 @@
+# JetBrains local IDE settings
 /.idea/
+
+# dotenv
+.env
+.env*.local
