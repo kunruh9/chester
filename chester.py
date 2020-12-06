@@ -4,6 +4,7 @@ import os
 import sys
 
 from dotenv import load_dotenv
+
 load_dotenv()
 
 
@@ -48,11 +49,9 @@ class Chester(discord.Client):
     def calculate_games_played(response_body):
         total = 0
         for game_stats in response_body['perfs'].items():
-                total += game_stats[1].get('games', 0)
+            total += game_stats[1].get('games', 0)
 
         response_body['games_played'] = total
-
-
 
 
 chester = Chester()
