@@ -4,6 +4,7 @@ import sys
 from src.clients.lichess import *
 
 lichess = LiChess()
+COMMAND_PREFIX = '!lichess'
 
 
 class Chester(discord.Client):
@@ -14,25 +15,32 @@ class Chester(discord.Client):
         if message.author == self.user:
             return
 
-        message_tokens = message.content.strip().split()
-        prefix_token = message_tokens.pop(0)
+        if not message.content.startswith(COMMAND_PREFIX):
+            return
 
-        if prefix_token == '!lichess':
-            response = os.environ.get('FALLBACK_RESPONSE')
+        message_tokens = message.content.strip().lstrip(COMMAND_PREFIX).split()
 
-            if message_tokens[0] == 'profile':
-                try:
-                    response_body = lichess.users.get_public_data(message_tokens[1])
-                    self.calculate_games_played(response_body)
-                    response = '''`{username}`
-                    **Games Played:** {games_played}
-                    **Online?:** {online}
-                    '''.format(**response_body)
-                except berserk.exceptions.ResponseError as e:
-                    if e.status_code == 404:
-                        response = f'`{message_tokens[1]}` not found :('
+        if len(message_tokens) < 1:
+            return
 
-            await message.channel.send(response)
+        response = os.environ.get('FALLBACK_RESPONSE')
+
+        if message_tokens[0] == 'profile':
+            try:
+                if len(message_tokens) < 2:
+                    return
+
+                response_body = lichess.users.get_public_data(message_tokens[1])
+                self.calculate_games_played(response_body)
+                response = '''`{username}`
+                **Games Played:** {games_played}
+                **Online?:** {online}
+                '''.format(**response_body)
+            except berserk.exceptions.ResponseError as e:
+                if e.status_code == 404:
+                    response = f'`{message_tokens[1]}` not found :('
+
+        await message.channel.send(response)
 
     async def on_error(self, event_method, *args, **kwargs):
         print(sys.exc_info())
