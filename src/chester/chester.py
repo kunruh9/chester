@@ -1,19 +1,12 @@
-import berserk
 import discord
-import os
 import sys
 
-from dotenv import load_dotenv
+from src.clients.lichess import *
 
-load_dotenv()
+lichess = LiChess()
 
 
 class Chester(discord.Client):
-    def __init__(self, **options):
-        super().__init__(**options)
-        self.session = berserk.TokenSession(os.environ.get('LICHESS_API_TOKEN'))
-        self.lichess = berserk.Client(self.session)
-
     async def on_ready(self):
         print('Logged on as', self.user)
 
@@ -29,7 +22,7 @@ class Chester(discord.Client):
 
             if message_tokens[0] == 'profile':
                 try:
-                    response_body = self.lichess.users.get_public_data(message_tokens[1])
+                    response_body = lichess.users.get_public_data(message_tokens[1])
                     self.calculate_games_played(response_body)
                     response = '''`{username}`
                     **Games Played:** {games_played}
