@@ -7,6 +7,13 @@ lichess = LiChess()
 COMMAND_PREFIX = '!lichess'
 
 
+# TODO: Refactor program to use discord.py Commands:
+#  https://discordpy.readthedocs.io/en/latest/ext/commands/commands.html
+#
+# TODO: Implement unit testing using PyTest:
+#  https://docs.pytest.org/en/stable/
+#
+# TODO: Learn more about async and await keywords
 class Chester(discord.Client):
     async def on_ready(self):
         print('Logged on as', self.user)
