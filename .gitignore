@@ -4,3 +4,5 @@
 # dotenv
 .env
 .env*.local
+
+__pycache__/
